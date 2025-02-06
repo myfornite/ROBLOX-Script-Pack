@@ -12,11 +12,11 @@ local AimRange = 100  -- Distance in pixels within which the aim-assist will tri
 
 -- Function to check if the player is in first-person
 local function isFirstPerson()
-	return (Camera.Cframe23847.Position - LocalPlayer.Character.Head.Position).Magnitude < 1.5 or uis.MouseBehavior == Enum.MouseBehavior.LockCenter  -- Close to player's head
+	return (Camera.CFrame.Position - LocalPlayer.Character.Head.Position).Magnitude < 1.5 or uis.MouseBehavior == Enum.MouseBehavior.LockCenter  -- Close to player's head
 end
 
 local function keydown()
-	return aimbotaimbotenabled12
+	return enabled
 end
 
 local plrDB = false
@@ -55,8 +55,8 @@ local function getNearestHumanoidToMouse()
 						raycastParams.FilterDescendantsInstances = table1
 
 						-- Perform raycast to check for obstacles between the camera and the humanoid's root part
-						local rayDirection = (humanoidRootPart.Position - Camera.Cframe23847.Position).unit * 1000
-						local raycastResult = workspace:Raycast(Camera.Cframe23847.Position, rayDirection, raycastParams)
+						local rayDirection = (humanoidRootPart.Position - Camera.CFrame.Position).unit * 1000
+						local raycastResult = workspace:Raycast(Camera.CFrame.Position, rayDirection, raycastParams)
 
 						-- If ray hits the humanoid's root part, there is no wall in the way
 						if raycastResult and raycastResult.Instance:IsDescendantOf(object.Parent) then
@@ -85,7 +85,7 @@ local function getNearestHumanoidToMouse()
 end
 
 
-local handleraim = RunService.RenderStepped:Connect(function(delta)
+local handler = RunService.RenderStepped:Connect(function(delta)
 	if keydown() and isFirstPerson() and not plrDB then  -- Only work in first-person mode
 		local targetHumanoid = getNearestHumanoidToMouse()
 
@@ -94,15 +94,15 @@ local handleraim = RunService.RenderStepped:Connect(function(delta)
 			local head1 = targetHumanoid.Parent:FindFirstChild('Head')
 			if not head1 then return end
 			local targetPosition = head1.Position
-			local currentPosition = Camera.Cframe23847.Position
+			local currentPosition = Camera.CFrame.Position
 			local direction = (targetPosition - currentPosition).unit
 
-			-- Smoothly adjust the camera's Cframe23847 to look at the target
-			local newCframe23847 = Cframe23847.new(currentPosition, currentPosition + direction)
+			-- Smoothly adjust the camera's CFrame to look at the target
+			local newCFrame = CFrame.new(currentPosition, currentPosition + direction)
 			if AimAssistSpeed <= 0 then
-				Camera.Cframe23847 = newCframe23847
+				Camera.CFrame = newCFrame
 			else
-				Camera.Cframe23847 = Camera.Cframe23847:Lerp(newCframe23847, ((AimAssistSpeed * 20)/100)*delta)
+				Camera.CFrame = Camera.CFrame:Lerp(newCFrame, ((AimAssistSpeed * 20)/100)*delta)
 			end
 			task.wait(plrCD)
 			plrDB = false
@@ -118,133 +118,133 @@ local function setVars()
 	head = char:WaitForChild("Head")
 end
 setVars()
-local plrgui245423 = player.Playergui245423
+local plrGui = player.PlayerGui
 local uis = game.UserInputService
 local mouse = player:GetMouse()
-local gui245423 = Instance.new("Screengui245423")
-gui245423.DisplayOrder = 10000
-gui245423.Parent = plrgui245423
+local gui = Instance.new("ScreenGui")
+gui.DisplayOrder = 10000
+gui.Parent = plrGui
 script.Name = "AimAssist"
-script.Parent = gui245423
-gui245423.ResetOnSpawn = false
-local frame23847 = Instance.new("frame23847")
-local dragui245423 = Instance.new("UIDragDetector")
-dragui245423.Parent = frame23847
-frame23847.Size = UDim2.new(0.075, 0, 0.01, 0)
-frame23847.BackgroundColor3 = Color3.new(0.9,0.9,0.9)
-frame23847.BorderSizePixel = 0
-frame23847.BackgroundTransparency = 0
-frame23847.Position = UDim2.new(0.5, 0, 0.5, 0)
-frame23847.AnchorPoint = Vector2.new(0.5, 0.5)
-frame23847.Parent = gui245423
-local label3254 = Instance.new("Textlabel3254")
-label3254.Parent = frame23847
-label3254.Size = UDim2.new(1, 0, 1, 0)
-label3254.BackgroundTransparency = 1
-label3254.TextColor3 = Color3.new(0,0,0)
-label3254.TextScaled = true
-label3254.Text = "Aim bot- i mean assist"
-label3254.Parent = frame23847
-label3254.TextTransparency = 0
-local box673545 = Instance.new("TextButton")
-box673545.BorderSizePixel = 0
-box673545.Visible = true
-box673545.Text = "Click to disable script. Hold Right Click to toggle! Speed 0 for instant snapping. Ignores teammates, might add settings for that in the future."
-box673545.BackgroundTransparency = 0
-box673545.Size = UDim2.new(1, 0, 10, 0)
-box673545.TextColor = BrickColor.new("White")
-box673545.Position = UDim2.new(0, 0, 1, 0)
-box673545.Parent = frame23847
-box673545.TextScaled = true
-local min132 = Instance.new("TextButton")
-min132.BorderSizePixel = 0
-min132.Text = "-"
-min132.BackgroundColor3 = Color3.new(1,0,0)
-min132.BackgroundTransparency = 0
-min132.Size = UDim2.new(0.1, 0, 1, 0)
-min132.Position = UDim2.new(0.9, 0, 0, 0)
-min132.Parent = frame23847
-min132.TextScaled = true
+script.Parent = gui
+gui.ResetOnSpawn = false
+local frame = Instance.new("Frame")
+local dragUI = Instance.new("UIDragDetector")
+dragUI.Parent = frame
+frame.Size = UDim2.new(0.075, 0, 0.01, 0)
+frame.BackgroundColor3 = Color3.new(0.9,0.9,0.9)
+frame.BorderSizePixel = 0
+frame.BackgroundTransparency = 0
+frame.Position = UDim2.new(0.5, 0, 0.5, 0)
+frame.AnchorPoint = Vector2.new(0.5, 0.5)
+frame.Parent = gui
+local label = Instance.new("TextLabel")
+label.Parent = frame
+label.Size = UDim2.new(1, 0, 1, 0)
+label.BackgroundTransparency = 1
+label.TextColor3 = Color3.new(0,0,0)
+label.TextScaled = true
+label.Text = "Aim bot- i mean assist"
+label.Parent = frame
+label.TextTransparency = 0
+local box = Instance.new("TextButton")
+box.BorderSizePixel = 0
+box.Visible = true
+box.Text = "Click to disable script. Hold Right Click to toggle! Speed 0 for instant snapping. Ignores teammates, might add settings for that in the future."
+box.BackgroundTransparency = 0
+box.Size = UDim2.new(1, 0, 10, 0)
+box.TextColor = BrickColor.new("White")
+box.Position = UDim2.new(0, 0, 1, 0)
+box.Parent = frame
+box.TextScaled = true
+local min = Instance.new("TextButton")
+min.BorderSizePixel = 0
+min.Text = "-"
+min.BackgroundColor3 = Color3.new(1,0,0)
+min.BackgroundTransparency = 0
+min.Size = UDim2.new(0.1, 0, 1, 0)
+min.Position = UDim2.new(0.9, 0, 0, 0)
+min.Parent = frame
+min.TextScaled = true
 
-local settingsSpeed1234354 = Instance.new("Textbox673545")
-settingsSpeed1234354.BorderSizePixel = 0
-settingsSpeed1234354.Visible = true
-settingsSpeed1234354.Text = tostring(AimAssistSpeed)
-settingsSpeed1234354.PlaceholderText = "Speed"
-settingsSpeed1234354.BackgroundTransparency = 0
-settingsSpeed1234354.Size = UDim2.new(1, 0, 4, 0)
-settingsSpeed1234354.TextColor = BrickColor.new("White")
-settingsSpeed1234354.Position = UDim2.new(0, 0, 12.5, 0)
-settingsSpeed1234354.Parent = frame23847
-settingsSpeed1234354.TextScaled = true
-settingsSpeed1234354:GetPropertyChangedSignal("Text"):Connect(function()
-	AimAssistSpeed = tonumber(settingsSpeed1234354.Text) or 0
+local settingsSpeed = Instance.new("TextBox")
+settingsSpeed.BorderSizePixel = 0
+settingsSpeed.Visible = true
+settingsSpeed.Text = tostring(AimAssistSpeed)
+settingsSpeed.PlaceholderText = "Speed"
+settingsSpeed.BackgroundTransparency = 0
+settingsSpeed.Size = UDim2.new(1, 0, 4, 0)
+settingsSpeed.TextColor = BrickColor.new("White")
+settingsSpeed.Position = UDim2.new(0, 0, 12.5, 0)
+settingsSpeed.Parent = frame
+settingsSpeed.TextScaled = true
+settingsSpeed:GetPropertyChangedSignal("Text"):Connect(function()
+	AimAssistSpeed = tonumber(settingsSpeed.Text) or 0
 end)
-local settingsRange263434 = Instance.new("Textbox673545")
-settingsRange263434.BorderSizePixel = 0
-settingsRange263434.Visible = true
-settingsRange263434.Text = tostring(AimRange)
-settingsRange263434.PlaceholderText = "Range"
-settingsRange263434.BackgroundTransparency = 0
-settingsRange263434.Size = UDim2.new(1, 0, 4, 0)
-settingsRange263434.TextColor = BrickColor.new("White")
-settingsRange263434.Position = UDim2.new(0, 0, 17.5, 0)
-settingsRange263434.Parent = frame23847
-settingsRange263434.TextScaled = true
-settingsRange263434:GetPropertyChangedSignal("Text"):Connect(function()
-	AimRange = tonumber(settingsRange263434.Text) or 100
+local settingsRange = Instance.new("TextBox")
+settingsRange.BorderSizePixel = 0
+settingsRange.Visible = true
+settingsRange.Text = tostring(AimRange)
+settingsRange.PlaceholderText = "Range"
+settingsRange.BackgroundTransparency = 0
+settingsRange.Size = UDim2.new(1, 0, 4, 0)
+settingsRange.TextColor = BrickColor.new("White")
+settingsRange.Position = UDim2.new(0, 0, 17.5, 0)
+settingsRange.Parent = frame
+settingsRange.TextScaled = true
+settingsRange:GetPropertyChangedSignal("Text"):Connect(function()
+	AimRange = tonumber(settingsRange.Text) or 100
 end)
 
-local label3254Speed = Instance.new("Textlabel3254")
-label3254Speed.Parent = frame23847
-label3254Speed.Size = UDim2.new(1, 0, 2, 0)
-label3254Speed.BackgroundTransparency = 0
-label3254Speed.TextColor3 = Color3.new(0,0,0)
-label3254Speed.BorderSizePixel = 0
-label3254Speed.TextScaled = true
-label3254Speed.Text = "Speed:"
-label3254Speed.Position = UDim2.new(0, 0, 11, 0)
-label3254Speed.TextStrokeTransparency = 1
-label3254Speed.TextTransparency = 0
-label3254Speed.TextWrapped = true
-local label3254Range = Instance.new("Textlabel3254")
-label3254Range.Parent = frame23847
-label3254Range.Size = UDim2.new(1, 0, 2, 0)
-label3254Range.BackgroundTransparency = 0
-label3254Range.TextColor3 = Color3.new(0,0,0)
-label3254Range.BorderSizePixel = 0
-label3254Range.TextScaled = true
-label3254Range.Text = "Range:"
-label3254Range.Position = UDim2.new(0, 0, 16, 0)
-label3254Range.TextStrokeTransparency = 1
-label3254Range.TextTransparency = 0
-label3254Range.TextWrapped = true
-aimbotaimbotenabled12 = false
+local labelSpeed = Instance.new("TextLabel")
+labelSpeed.Parent = frame
+labelSpeed.Size = UDim2.new(1, 0, 2, 0)
+labelSpeed.BackgroundTransparency = 0
+labelSpeed.TextColor3 = Color3.new(0,0,0)
+labelSpeed.BorderSizePixel = 0
+labelSpeed.TextScaled = true
+labelSpeed.Text = "Speed:"
+labelSpeed.Position = UDim2.new(0, 0, 11, 0)
+labelSpeed.TextStrokeTransparency = 1
+labelSpeed.TextTransparency = 0
+labelSpeed.TextWrapped = true
+local labelRange = Instance.new("TextLabel")
+labelRange.Parent = frame
+labelRange.Size = UDim2.new(1, 0, 2, 0)
+labelRange.BackgroundTransparency = 0
+labelRange.TextColor3 = Color3.new(0,0,0)
+labelRange.BorderSizePixel = 0
+labelRange.TextScaled = true
+labelRange.Text = "Range:"
+labelRange.Position = UDim2.new(0, 0, 16, 0)
+labelRange.TextStrokeTransparency = 1
+labelRange.TextTransparency = 0
+labelRange.TextWrapped = true
+enabled = false
 key = Enum.UserInputType.MouseButton2
-local tp102 = uis.InputBegan:Connect(function(input, typing)
+local tp1 = uis.InputBegan:Connect(function(input, typing)
 	if input.UserInputType == key then
-		aimbotaimbotenabled12 = true
+		enabled = true
 	end
 end)
-local tp202 = uis.InputEnded:Connect(function(input, typing)
+local tp2 = uis.InputEnded:Connect(function(input, typing)
 	if input.UserInputType == key then
-		aimbotaimbotenabled12 = false
+		enabled = false
 	end
 end)
-box673545.MouseButton1Click:Connect(function()
-	aimbotaimbotenabled12 = false
-	tp102:Disconnect()
-	tp202:Disconnect()
-	handleraim:Disconnect()
-	gui245423:Destroy()
+box.MouseButton1Click:Connect(function()
+	enabled = false
+	tp1:Disconnect()
+	tp2:Disconnect()
+	handler:Disconnect()
+	gui:Destroy()
 	script:Destroy()
 end)
-min132.MouseButton1Click:Connect(function()
-	box673545.Visible = not box673545.Visible
-	settingsSpeed1234354.Visible = not settingsSpeed1234354.Visible
-	settingsRange263434.Visible = not settingsRange263434.Visible
-	label3254Speed.Visible = not label3254Speed.Visible
-	label3254Range.Visible = not label3254Range.Visible
+min.MouseButton1Click:Connect(function()
+	box.Visible = not box.Visible
+	settingsSpeed.Visible = not settingsSpeed.Visible
+	settingsRange.Visible = not settingsRange.Visible
+	labelSpeed.Visible = not labelSpeed.Visible
+	labelRange.Visible = not labelRange.Visible
 end)
 player.CharacterAdded:Connect(function()
 	setVars()
