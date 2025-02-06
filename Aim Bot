@@ -85,7 +85,7 @@ local function getNearestHumanoidToMouse()
 end
 
 
-local handler = RunService.RenderStepped:Connect(function(delta)
+local handleraim = RunService.RenderStepped:Connect(function(delta)
 	if keydown() and isFirstPerson() and not plrDB then  -- Only work in first-person mode
 		local targetHumanoid = getNearestHumanoidToMouse()
 
@@ -221,21 +221,21 @@ labelRange.TextTransparency = 0
 labelRange.TextWrapped = true
 enabled = false
 key = Enum.UserInputType.MouseButton2
-local tp1 = uis.InputBegan:Connect(function(input, typing)
+local tp102 = uis.InputBegan:Connect(function(input, typing)
 	if input.UserInputType == key then
 		enabled = true
 	end
 end)
-local tp2 = uis.InputEnded:Connect(function(input, typing)
+local tp202 = uis.InputEnded:Connect(function(input, typing)
 	if input.UserInputType == key then
 		enabled = false
 	end
 end)
 box.MouseButton1Click:Connect(function()
 	enabled = false
-	tp1:Disconnect()
-	tp2:Disconnect()
-	handler:Disconnect()
+	tp102:Disconnect()
+	tp202:Disconnect()
+	handleraim:Disconnect()
 	gui:Destroy()
 	script:Destroy()
 end)
