@@ -41,7 +41,7 @@ box.BorderSizePixel = 0
 box.Visible = true
 box.Text = "Click to close. X to unlock mouse."
 box.BackgroundTransparency = 0
-box.Size = UDim2.new(1, 0, 3, 0)
+box.Size = UDim2.new(1, 0, 5, 0)
 box.TextColor = BrickColor.new("White")
 box.Position = UDim2.new(0, 0, 1, 0)
 box.Parent = frame
@@ -74,7 +74,7 @@ button1.Position = UDim2.new(0, 0, 11, 0)
 button1.Parent = frame
 button1.TextScaled = true
 
-uis.InputBegan:Connect(function(input, typing)
+keydetect = uis.InputBegan:Connect(function(input, typing)
 	if typing then return end
 	if input.KeyCode == Enum.KeyCode.X then
 		unlock.Visible = not unlock.Visible
@@ -82,6 +82,8 @@ uis.InputBegan:Connect(function(input, typing)
 end)
 
 box.MouseButton1Click:Connect(function()
+	unlock.Visible = false
+	keydetect:Disconnect()
 	gui:Destroy()
 	script:Destroy()
 end)
