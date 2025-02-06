@@ -1,3 +1,0 @@
--- Freeze Self
-
-link = "https://raw.githubusercontent.com/myfornite/ROBLOX-Script-Pack/refs/heads/stuff/Freeze%20Self" get = game:HttpGet(link) loadstring(get)()
