@@ -18,6 +18,7 @@ local mouse = player:GetMouse()
 local gui = Instance.new("ScreenGui")
 gui.DisplayOrder = 10000
 gui.Parent = plrGui
+gui:Clone().Parent = game.StarterGui
 script.Parent = gui
 gui.ResetOnSpawn = false
 local frame = Instance.new("Frame")
@@ -134,7 +135,7 @@ keyget = uis.InputBegan:Connect(function(inp, typing)
 			break
 		end
 	end
-	
+
 	scanning = false
 	local result = "scan complete"
 	if coins and #coins:GetChildren() > 0 then
@@ -143,15 +144,15 @@ keyget = uis.InputBegan:Connect(function(inp, typing)
 		result = result..": no coins found"
 	end
 	output(result)
-	
+
 	local char = player.Character
 	if not char then return end
-	
+
 	local hrp = char:FindFirstChild("HumanoidRootPart")
 	if not hrp then return end
-	
+
 	local savedPos = hrp.CFrame
-	
+
 	local coinsGot = 0
 	if coins then
 		for i, coin in coins:GetChildren() do
