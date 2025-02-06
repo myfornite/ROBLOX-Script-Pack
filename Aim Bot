@@ -1,0 +1,251 @@
+-- Aim Bot Script
+-- made by chatgpt and me lol
+
+local Camera = workspace.CurrentCamera
+local Mouse = game:GetService('Players').LocalPlayer:GetMouse()
+local RunService = game:GetService('RunService')
+local LocalPlayer = game:GetService('Players').LocalPlayer
+local uis = game:GetService('UserInputService')
+
+local AimAssistSpeed = 100  -- Smoothness for aim assist; lower values = slower movement
+local AimRange = 100  -- Distance in pixels within which the aim-assist will trigger
+
+-- Function to check if the player is in first-person
+local function isFirstPerson()
+	return (Camera.CFrame.Position - LocalPlayer.Character.Head.Position).Magnitude < 1.5 or uis.MouseBehavior == Enum.MouseBehavior.LockCenter  -- Close to player's head
+end
+
+local function keydown()
+	return enabled
+end
+
+local plrDB = false
+local plrCD = 0
+
+-- Function to find the nearest humanoid to the mouse that is visible (no walls)
+local function getNearestHumanoidToMouse()
+	local nearestHumanoid = nil
+	local shortestDistance = (AimRange)*10
+
+	for _, object in pairs(workspace:GetDescendants()) do
+		if object:IsA("Humanoid") and object.Parent:FindFirstChild("HumanoidRootPart") then
+			if object.Parent ~= LocalPlayer.Character then
+				local humanoidRootPart = object.Parent:FindFirstChild("HumanoidRootPart")
+				local screenPosition, onScreen = Camera:WorldToScreenPoint(humanoidRootPart.Position)
+
+				if onScreen then
+					local distanceFromMouse = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(screenPosition.X, screenPosition.Y)).magnitude
+
+					if distanceFromMouse < shortestDistance then
+						-- Set up raycast parameters to ignore the player's character and their parts
+
+						local raycastParams = RaycastParams.new()
+						raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+						local table1 = {LocalPlayer.Character}
+						--[[
+						for i, part in game.Workspace:GetDescendants() do
+							if not (part.Parent:FindFirstChildOfClass("Humanoid")) then
+								if part:IsA("BasePart") or part:IsA("MeshPart") or part:IsA("UnionOperation") then
+									table.insert(table1, part)
+								end
+							end
+							task.wait()
+						end
+						--]]
+						raycastParams.FilterDescendantsInstances = table1
+
+						-- Perform raycast to check for obstacles between the camera and the humanoid's root part
+						local rayDirection = (humanoidRootPart.Position - Camera.CFrame.Position).unit * 1000
+						local raycastResult = workspace:Raycast(Camera.CFrame.Position, rayDirection, raycastParams)
+
+						-- If ray hits the humanoid's root part, there is no wall in the way
+						if raycastResult and raycastResult.Instance:IsDescendantOf(object.Parent) then
+							local plr = game.Players:GetPlayerFromCharacter(object.Parent)
+							if plr then
+								local plrhum = plr.Character:FindFirstChildOfClass("Humanoid")
+								local plrhrp = plr.Character:FindFirstChild("HumanoidRootPart")
+								if (plr.Team == player.Team and #game.Teams:GetChildren() > 1) then
+									return
+								end
+								if not plrhum then return end
+								if not plrhrp then return end
+								if plrhum and plrhum.Health <= 0 then return end
+								if plrhum and plrhum.Health >= 101 then return end
+							end
+							nearestHumanoid = object
+							shortestDistance = distanceFromMouse
+						end
+					end
+				end
+			end
+		end
+	end
+
+	return nearestHumanoid
+end
+
+
+local handler = RunService.RenderStepped:Connect(function(delta)
+	if keydown() and isFirstPerson() and not plrDB then  -- Only work in first-person mode
+		local targetHumanoid = getNearestHumanoidToMouse()
+
+		if targetHumanoid and targetHumanoid.Parent:FindFirstChild('HumanoidRootPart') then
+			plrDB = true
+			local head1 = targetHumanoid.Parent:FindFirstChild('Head')
+			if not head1 then return end
+			local targetPosition = head1.Position
+			local currentPosition = Camera.CFrame.Position
+			local direction = (targetPosition - currentPosition).unit
+
+			-- Smoothly adjust the camera's CFrame to look at the target
+			local newCFrame = CFrame.new(currentPosition, currentPosition + direction)
+			if AimAssistSpeed <= 0 then
+				Camera.CFrame = newCFrame
+			else
+				Camera.CFrame = Camera.CFrame:Lerp(newCFrame, ((AimAssistSpeed * 20)/100)*delta)
+			end
+			task.wait(plrCD)
+			plrDB = false
+		end
+	end
+end)
+
+player = game.Players.LocalPlayer
+local function setVars()
+	char = player.Character
+	hum = char:WaitForChild("Humanoid")
+	hrp = char:WaitForChild("HumanoidRootPart")
+	head = char:WaitForChild("Head")
+end
+setVars()
+local plrGui = player.PlayerGui
+local uis = game.UserInputService
+local mouse = player:GetMouse()
+local gui = Instance.new("ScreenGui")
+gui.DisplayOrder = 10000
+gui.Parent = plrGui
+script.Name = "AimAssist"
+script.Parent = gui
+gui.ResetOnSpawn = false
+local frame = Instance.new("Frame")
+local dragUI = Instance.new("UIDragDetector")
+dragUI.Parent = frame
+frame.Size = UDim2.new(0.075, 0, 0.01, 0)
+frame.BackgroundColor3 = Color3.new(0.9,0.9,0.9)
+frame.BorderSizePixel = 0
+frame.BackgroundTransparency = 0
+frame.Position = UDim2.new(0.5, 0, 0.5, 0)
+frame.AnchorPoint = Vector2.new(0.5, 0.5)
+frame.Parent = gui
+local label = Instance.new("TextLabel")
+label.Parent = frame
+label.Size = UDim2.new(1, 0, 1, 0)
+label.BackgroundTransparency = 1
+label.TextColor3 = Color3.new(0,0,0)
+label.TextScaled = true
+label.Text = "Aim bot- i mean assist"
+label.Parent = frame
+label.TextTransparency = 0
+local box = Instance.new("TextButton")
+box.BorderSizePixel = 0
+box.Visible = true
+box.Text = "Click to disable script. Hold Right Click to toggle! Speed 0 for instant snapping. Ignores teammates, might add settings for that in the future."
+box.BackgroundTransparency = 0
+box.Size = UDim2.new(1, 0, 10, 0)
+box.TextColor = BrickColor.new("White")
+box.Position = UDim2.new(0, 0, 1, 0)
+box.Parent = frame
+box.TextScaled = true
+local min = Instance.new("TextButton")
+min.BorderSizePixel = 0
+min.Text = "-"
+min.BackgroundColor3 = Color3.new(1,0,0)
+min.BackgroundTransparency = 0
+min.Size = UDim2.new(0.1, 0, 1, 0)
+min.Position = UDim2.new(0.9, 0, 0, 0)
+min.Parent = frame
+min.TextScaled = true
+
+local settingsSpeed = Instance.new("TextBox")
+settingsSpeed.BorderSizePixel = 0
+settingsSpeed.Visible = true
+settingsSpeed.Text = tostring(AimAssistSpeed)
+settingsSpeed.PlaceholderText = "Speed"
+settingsSpeed.BackgroundTransparency = 0
+settingsSpeed.Size = UDim2.new(1, 0, 4, 0)
+settingsSpeed.TextColor = BrickColor.new("White")
+settingsSpeed.Position = UDim2.new(0, 0, 12.5, 0)
+settingsSpeed.Parent = frame
+settingsSpeed.TextScaled = true
+settingsSpeed:GetPropertyChangedSignal("Text"):Connect(function()
+	AimAssistSpeed = tonumber(settingsSpeed.Text) or 0
+end)
+local settingsRange = Instance.new("TextBox")
+settingsRange.BorderSizePixel = 0
+settingsRange.Visible = true
+settingsRange.Text = tostring(AimRange)
+settingsRange.PlaceholderText = "Range"
+settingsRange.BackgroundTransparency = 0
+settingsRange.Size = UDim2.new(1, 0, 4, 0)
+settingsRange.TextColor = BrickColor.new("White")
+settingsRange.Position = UDim2.new(0, 0, 17.5, 0)
+settingsRange.Parent = frame
+settingsRange.TextScaled = true
+settingsRange:GetPropertyChangedSignal("Text"):Connect(function()
+	AimRange = tonumber(settingsRange.Text) or 100
+end)
+
+local labelSpeed = Instance.new("TextLabel")
+labelSpeed.Parent = frame
+labelSpeed.Size = UDim2.new(1, 0, 2, 0)
+labelSpeed.BackgroundTransparency = 0
+labelSpeed.TextColor3 = Color3.new(0,0,0)
+labelSpeed.BorderSizePixel = 0
+labelSpeed.TextScaled = true
+labelSpeed.Text = "Speed:"
+labelSpeed.Position = UDim2.new(0, 0, 11, 0)
+labelSpeed.TextStrokeTransparency = 1
+labelSpeed.TextTransparency = 0
+labelSpeed.TextWrapped = true
+local labelRange = Instance.new("TextLabel")
+labelRange.Parent = frame
+labelRange.Size = UDim2.new(1, 0, 2, 0)
+labelRange.BackgroundTransparency = 0
+labelRange.TextColor3 = Color3.new(0,0,0)
+labelRange.BorderSizePixel = 0
+labelRange.TextScaled = true
+labelRange.Text = "Range:"
+labelRange.Position = UDim2.new(0, 0, 16, 0)
+labelRange.TextStrokeTransparency = 1
+labelRange.TextTransparency = 0
+labelRange.TextWrapped = true
+enabled = false
+key = Enum.UserInputType.MouseButton2
+local tp1 = uis.InputBegan:Connect(function(input, typing)
+	if input.UserInputType == key then
+		enabled = true
+	end
+end)
+local tp2 = uis.InputEnded:Connect(function(input, typing)
+	if input.UserInputType == key then
+		enabled = false
+	end
+end)
+box.MouseButton1Click:Connect(function()
+	enabled = false
+	tp1:Disconnect()
+	tp2:Disconnect()
+	handler:Disconnect()
+	gui:Destroy()
+	script:Destroy()
+end)
+min.MouseButton1Click:Connect(function()
+	box.Visible = not box.Visible
+	settingsSpeed.Visible = not settingsSpeed.Visible
+	settingsRange.Visible = not settingsRange.Visible
+	labelSpeed.Visible = not labelSpeed.Visible
+	labelRange.Visible = not labelRange.Visible
+end)
+player.CharacterAdded:Connect(function()
+	setVars()
+end)
