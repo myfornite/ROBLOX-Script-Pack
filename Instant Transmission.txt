@@ -1,3 +1,0 @@
--- Instant Transmission
-
-link = "https://raw.githubusercontent.com/myfornite/ROBLOX-Script-Pack/refs/heads/stuff/Instant%20Transmission" get = game:HttpGet(link) loadstring(get)()
