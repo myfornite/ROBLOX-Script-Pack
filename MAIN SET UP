@@ -1,21 +1,21 @@
-link = "https://raw.githubusercontent.com/myfornite/myfornite6-ROBLOX-Script-Pack/refs/heads/stuff/Unlock%20Mouse"
+link = "https://raw.githubusercontent.com/myfornite/ROBLOX-Script-Pack/refs/heads/stuff/Unlock%20Mouse"
 get = game:HttpGet(link)
 loadstring(get)()
-link = "https://raw.githubusercontent.com/myfornite/myfornite6-ROBLOX-Script-Pack/refs/heads/stuff/Flying%20Ability"
+link = "https://raw.githubusercontent.com/myfornite/ROBLOX-Script-Pack/refs/heads/stuff/Flying%20Ability"
 get = game:HttpGet(link)
 loadstring(get)()
-link = "https://raw.githubusercontent.com/myfornite/myfornite6-ROBLOX-Script-Pack/refs/heads/stuff/Teleportation"
+link = "https://raw.githubusercontent.com/myfornite/ROBLOX-Script-Pack/refs/heads/stuff/Teleportation"
 get = game:HttpGet(link)
 loadstring(get)()
-link = "https://raw.githubusercontent.com/myfornite/myfornite6-ROBLOX-Script-Pack/refs/heads/stuff/ESP"
+link = "https://raw.githubusercontent.com/myfornite/ROBLOX-Script-Pack/refs/heads/stuff/ESP"
 get = game:HttpGet(link)
 loadstring(get)()
-link = "https://raw.githubusercontent.com/myfornite/myfornite6-ROBLOX-Script-Pack/refs/heads/stuff/Instant%20Transmission"
+link = "https://raw.githubusercontent.com/myfornite/ROBLOX-Script-Pack/refs/heads/stuff/Instant%20Transmission"
 get = game:HttpGet(link)
 loadstring(get)()
-link = "https://raw.githubusercontent.com/myfornite/myfornite6-ROBLOX-Script-Pack/refs/heads/stuff/Freeze%20Self"
+link = "https://raw.githubusercontent.com/myfornite/ROBLOX-Script-Pack/refs/heads/stuff/Freeze%20Self"
 get = game:HttpGet(link)
 loadstring(get)()
-link = "https://raw.githubusercontent.com/myfornite/myfornite6-ROBLOX-Script-Pack/refs/heads/stuff/Aim%20Bot"
+link = "https://raw.githubusercontent.com/myfornite/ROBLOX-Script-Pack/refs/heads/stuff/Aim%20Bot"
 get = game:HttpGet(link)
 loadstring(get)()
