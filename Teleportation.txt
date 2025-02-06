@@ -1,3 +1,0 @@
--- Teleportation
-
-link = "https://raw.githubusercontent.com/myfornite/ROBLOX-Script-Pack/refs/heads/stuff/Teleportation" get = game:HttpGet(link) loadstring(get)()
