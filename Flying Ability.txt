@@ -1,0 +1,3 @@
+-- Flying Ability
+
+link = "https://raw.githubusercontent.com/myfornite/ROBLOX-Script-Pack/refs/heads/stuff/Flying%20Ability" get = game:HttpGet(link) loadstring(get)()
