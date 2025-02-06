@@ -62,7 +62,7 @@ min.Parent = frame
 min.TextScaled = true
 sound.Volume = SOUND_VOLUME
 sound.SoundId = "rbxassetid://" .. SOUND_ID
-local tp = uis.InputBegan:Connect(function(input)
+local tp10000 = uis.InputBegan:Connect(function(input)
 	if uis:IsMouseButtonPressed(Enum.UserInputType.MouseButton2) and input.UserInputType == Enum.UserInputType.MouseButton1 then
 		local pos = mouse.Hit
 		hrp:PivotTo(pos)
@@ -71,7 +71,7 @@ local tp = uis.InputBegan:Connect(function(input)
 	end
 end)
 box.MouseButton1Click:Connect(function()
-	tp:Disconnect()
+	tp10000:Disconnect()
 	sound:Destroy()
 	gui:Destroy()
 	script:Destroy()
