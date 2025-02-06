@@ -132,7 +132,7 @@ local function teleport()
 end
 
 -- Keybind for teleportation
-local tp = uis.InputBegan:Connect(function(input, processed)
+local tpkey66 = uis.InputBegan:Connect(function(input, processed)
 	if not processed and input.KeyCode == Enum.KeyCode.T then
 		teleport()
 	end
@@ -140,7 +140,7 @@ end)
 
 -- Disable script button
 box.MouseButton1Click:Connect(function()
-	tp:Disconnect()
+	tp66:Disconnect()
 	sound:Destroy()
 	gui:Destroy()
 	script:Destroy()
