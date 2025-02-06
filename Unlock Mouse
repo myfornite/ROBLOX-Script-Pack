@@ -74,7 +74,7 @@ button1.Position = UDim2.new(0, 0, 11, 0)
 button1.Parent = frame
 button1.TextScaled = true
 
-keydetect = uis.InputBegan:Connect(function(input, typing)
+local keydetect = uis.InputBegan:Connect(function(input, typing)
 	if typing then return end
 	if input.KeyCode == Enum.KeyCode.X then
 		unlock.Visible = not unlock.Visible
