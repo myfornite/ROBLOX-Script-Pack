@@ -2,7 +2,7 @@
 -- this was made by me
 
 -- there is a glitch where sometimes it
--- doesn't show some players through walls
+-- stops highlighting some players
 -- if anyone knows a fix pls tell me
 
 local ENEMY_TRANSPARENCY = 0.6
