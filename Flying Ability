@@ -52,7 +52,7 @@ local function toggleFly(set)
 	end
 end
 
-local tp1 = UserInputService.InputBegan:Connect(function(input, gameProcessed)
+local tp16 = UserInputService.InputBegan:Connect(function(input, gameProcessed)
 	if gameProcessed then return end
 	if input.KeyCode == key then
 		toggleFly()
@@ -71,7 +71,7 @@ local tp1 = UserInputService.InputBegan:Connect(function(input, gameProcessed)
 	end
 end)
 
-local tp2 = UserInputService.InputEnded:Connect(function(input, gameProcessed)
+local tp26 = UserInputService.InputEnded:Connect(function(input, gameProcessed)
 	if input.KeyCode == Enum.KeyCode.W or input.KeyCode == Enum.KeyCode.S then
 		moveDirection = Vector3.new(moveDirection.X, moveDirection.Y, 0)
 	elseif input.KeyCode == Enum.KeyCode.A or input.KeyCode == Enum.KeyCode.D then
@@ -167,8 +167,8 @@ labelSpeed.TextWrapped = true
 key = Enum.KeyCode[TOGGLE_KEY]
 box.MouseButton1Click:Connect(function()
 	toggleFly(false)
-	tp1:Disconnect()
-	tp2:Disconnect()
+	tp16:Disconnect()
+	tp26:Disconnect()
 	gui:Destroy()
 	script:Destroy()
 end)
