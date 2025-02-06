@@ -64,7 +64,7 @@ local function freeze(val)
 		bodyPart.Anchored = val
 	end
 end
-local tp = uis.InputBegan:Connect(function(input, typing)
+local tpf = uis.InputBegan:Connect(function(input, typing)
 	if typing then return end
 	if input.KeyCode == Enum.KeyCode.V then
 		local db = not char:FindFirstChild("HumanoidRootPart").Anchored
@@ -73,7 +73,7 @@ local tp = uis.InputBegan:Connect(function(input, typing)
 end)
 box.MouseButton1Click:Connect(function()
 	freeze(false)
-	tp:Disconnect()
+	tpf:Disconnect()
 	gui:Destroy()
 	script:Destroy()
 end)
