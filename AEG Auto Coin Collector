@@ -1,0 +1,168 @@
+-- Auto Coin Collector for average elevator game
+-- i made this
+
+TOGGLE_KEY = "N"
+COLLECT_DELAY = 0.1
+
+player = game.Players.LocalPlayer
+local function setVars()
+	char = player.Character
+	hum = char:WaitForChild("Humanoid")
+	hrp = char:WaitForChild("HumanoidRootPart")
+	head = char:WaitForChild("Head")
+end
+setVars()
+local plrGui = player.PlayerGui
+local uis = game.UserInputService
+local mouse = player:GetMouse()
+local gui = Instance.new("ScreenGui")
+gui.DisplayOrder = 10000
+gui.Parent = plrGui
+script.Parent = gui
+gui.ResetOnSpawn = false
+local frame = Instance.new("Frame")
+local dragUI = Instance.new("UIDragDetector")
+dragUI.Parent = frame
+frame.Size = UDim2.new(0.075, 0, 0.01, 0)
+frame.BackgroundColor3 = Color3.new(0.9,0.9,0.9)
+frame.BorderSizePixel = 0
+frame.BackgroundTransparency = 0
+frame.Position = UDim2.new(0.5, 0, 0.5, 0)
+frame.AnchorPoint = Vector2.new(0.5, 0.5)
+frame.Parent = gui
+local label = Instance.new("TextLabel")
+label.Parent = frame
+label.Size = UDim2.new(1, 0, 1, 0)
+label.BackgroundTransparency = 1
+label.TextColor3 = Color3.new(0,0,0)
+label.TextScaled = true
+label.Text = "Auto Coin Collector"
+label.Parent = frame
+label.TextTransparency = 0
+local box = Instance.new("TextButton")
+box.BorderSizePixel = 0
+box.Visible = true
+box.Text = "Click to disable script. Press "..TOGGLE_KEY.." to scan and collect coins!"
+box.BackgroundTransparency = 0
+box.Size = UDim2.new(1, 0, 10, 0)
+box.TextColor = BrickColor.new("White")
+box.Position = UDim2.new(0, 0, 1, 0)
+box.Parent = frame
+box.TextScaled = true
+local min = Instance.new("TextButton")
+min.BorderSizePixel = 0
+min.Text = "-"
+min.BackgroundColor3 = Color3.new(1,0,0)
+min.BackgroundTransparency = 0
+min.Size = UDim2.new(0.1, 0, 1, 0)
+min.Position = UDim2.new(0.9, 0, 0, 0)
+min.Parent = frame
+min.TextScaled = true
+
+local settingsSpeed = Instance.new("TextBox")
+settingsSpeed.BorderSizePixel = 0
+settingsSpeed.Visible = true
+settingsSpeed.Text = tostring(COLLECT_DELAY)
+settingsSpeed.PlaceholderText = "#"
+settingsSpeed.BackgroundTransparency = 0
+settingsSpeed.Size = UDim2.new(1, 0, 4, 0)
+settingsSpeed.TextColor = BrickColor.new("White")
+settingsSpeed.Position = UDim2.new(0, 0, 12.5, 0)
+settingsSpeed.Parent = frame
+settingsSpeed.TextScaled = true
+settingsSpeed:GetPropertyChangedSignal("Text"):Connect(function()
+	COLLECT_DELAY = tonumber(settingsSpeed.Text) or 0
+end)
+
+local labelSpeed = Instance.new("TextLabel")
+labelSpeed.Parent = frame
+labelSpeed.Size = UDim2.new(1, 0, 2, 0)
+labelSpeed.BackgroundTransparency = 0
+labelSpeed.TextColor3 = Color3.new(0,0,0)
+labelSpeed.BorderSizePixel = 0
+labelSpeed.TextScaled = true
+labelSpeed.Text = "Collect Delay:"
+labelSpeed.Position = UDim2.new(0, 0, 11, 0)
+labelSpeed.TextStrokeTransparency = 1
+labelSpeed.TextTransparency = 0
+labelSpeed.TextWrapped = true
+
+local labelSpeed2 = Instance.new("TextLabel")
+labelSpeed2.Parent = frame
+labelSpeed2.Size = UDim2.new(1, 0, 6, 0)
+labelSpeed2.BackgroundTransparency = 0
+labelSpeed2.TextColor3 = Color3.new(0,0,0)
+labelSpeed2.BorderSizePixel = 0
+labelSpeed2.TextScaled = true
+labelSpeed2.Text = "..."
+labelSpeed2.Position = UDim2.new(0, 0, 16, 0)
+labelSpeed2.TextStrokeTransparency = 1
+labelSpeed2.TextTransparency = 0
+labelSpeed2.TextWrapped = true
+
+key = Enum.KeyCode[TOGGLE_KEY]
+box.MouseButton1Click:Connect(function()
+	keyget:Disconnect()
+	gui:Destroy()
+	script:Destroy()
+end)
+min.MouseButton1Click:Connect(function()
+	box.Visible = not box.Visible
+	settingsSpeed.Visible = not settingsSpeed.Visible
+	labelSpeed.Visible = not labelSpeed.Visible
+end)
+player.CharacterAdded:Connect(function()
+	setVars()
+end)
+
+local function output(text)
+	print(text)
+	labelSpeed2.Text = text
+end
+
+local scanning = false
+keyget = uis.InputBegan:Connect(function(inp, typing)
+	if typing then return end
+	if inp.KeyCode ~= key then return end
+	if scanning then return end
+	output("scan started")
+	scanning = true
+	local coins = nil
+	for i, item in game.Workspace:GetDescendants() do
+		if item.Name == "Coins" and item:IsA("Folder") then
+			coins = item
+			break
+		end
+	end
+	
+	scanning = false
+	local result = "scan complete"
+	if coins and #coins:GetChildren() > 0 then
+		result = result..": coins found"
+	else
+		result = result..": no coins found"
+	end
+	output(result)
+	
+	local char = player.Character
+	if not char then return end
+	
+	local hrp = char:FindFirstChild("HumanoidRootPart")
+	if not hrp then return end
+	
+	local savedPos = hrp.CFrame
+	
+	local coinsGot = 0
+	if coins then
+		for i, coin in coins:GetChildren() do
+			if coin:IsA("BasePart") and coin.Transparency ==0 then
+				char:PivotTo(CFrame.new(coin.Position))
+				coinsGot += 1
+				task.wait(COLLECT_DELAY)
+			end
+		end
+		task.wait(COLLECT_DELAY)
+		char:PivotTo(savedPos)
+		output("coins collected: " .. coinsGot)
+	end
+end)
