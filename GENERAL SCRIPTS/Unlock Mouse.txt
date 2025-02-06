@@ -1,0 +1,3 @@
+-- Unlock Mouse
+
+link = "https://raw.githubusercontent.com/myfornite/ROBLOX-Script-Pack/refs/heads/stuff/Unlock%20Mouse" get = game:HttpGet(link) loadstring(get)()
