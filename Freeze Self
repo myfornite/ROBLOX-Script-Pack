@@ -1,0 +1,85 @@
+-- Freeze Self Script
+-- this was made by me
+
+-- idrk wtf this can be used for
+-- you can have fake lag i guess
+
+local player = game.Players.LocalPlayer
+local function setVars()
+	char = player.Character
+	hum = char:WaitForChild("Humanoid")
+	hrp = char:WaitForChild("HumanoidRootPart")
+	head = char:WaitForChild("Head")
+end
+setVars()
+local plrGui = player.PlayerGui
+local uis = game.UserInputService
+local mouse = player:GetMouse()
+local gui = Instance.new("ScreenGui")
+gui.DisplayOrder = 10000
+gui.Parent = plrGui
+script.Parent = gui
+gui.ResetOnSpawn = false
+local frame = Instance.new("Frame")
+local dragUI = Instance.new("UIDragDetector")
+dragUI.Parent = frame
+frame.Size = UDim2.new(0.075, 0, 0.01, 0)
+frame.BackgroundColor3 = Color3.new(0.9,0.9,0.9)
+frame.BorderSizePixel = 0
+frame.BackgroundTransparency = 0
+frame.Position = UDim2.new(0.5, 0, 0.5, 0)
+frame.AnchorPoint = Vector2.new(0.5, 0.5)
+frame.Parent = gui
+local label = Instance.new("TextLabel")
+label.Parent = frame
+label.Size = UDim2.new(1, 0, 1, 0)
+label.BackgroundTransparency = 1
+label.TextColor3 = Color3.new(0,0,0)
+label.TextScaled = true
+label.Text = "Freeze Self"
+label.Parent = frame
+label.TextTransparency = 0
+local box = Instance.new("TextButton")
+box.BorderSizePixel = 0
+box.Visible = true
+box.Text = "Click to disable script. Press V to toggle!"
+box.BackgroundTransparency = 0
+box.Size = UDim2.new(1, 0, 4, 0)
+box.TextColor = BrickColor.new("White")
+box.Position = UDim2.new(0, 0, 1, 0)
+box.Parent = frame
+box.TextScaled = true
+local min = Instance.new("TextButton")
+min.BorderSizePixel = 0
+min.Text = "-"
+min.BackgroundColor3 = Color3.new(1,0,0)
+min.BackgroundTransparency = 0
+min.Size = UDim2.new(0.1, 0, 1, 0)
+min.Position = UDim2.new(0.9, 0, 0, 0)
+min.Parent = frame
+min.TextScaled = true
+local function freeze(val)
+	for i, bodyPart in pairs(char:GetDescendants()) do
+		if not bodyPart:IsA("BasePart") and not bodyPart:IsA("MeshPart") then continue end
+		bodyPart.Anchored = val
+	end
+end
+local tp = uis.InputBegan:Connect(function(input, typing)
+	if typing then return end
+	if input.KeyCode == Enum.KeyCode.V then
+		local db = not char:FindFirstChild("HumanoidRootPart").Anchored
+		freeze(db)
+	end
+end)
+box.MouseButton1Click:Connect(function()
+	freeze(false)
+	tp:Disconnect()
+	gui:Destroy()
+	script:Destroy()
+end)
+min.MouseButton1Click:Connect(function()
+	box.Visible = not box.Visible
+end)
+player.CharacterAdded:Connect(function()
+	setVars()
+end)
