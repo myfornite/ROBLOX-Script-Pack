@@ -1,0 +1,3 @@
+-- Auto Coin Collector for average elevator game
+
+link = "https://raw.githubusercontent.com/myfornite/ROBLOX-Script-Pack/refs/heads/stuff/AEG%20Auto%20Coin%20Collector" get = game:HttpGet(link) loadstring(get)()
