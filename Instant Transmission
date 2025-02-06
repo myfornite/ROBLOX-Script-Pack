@@ -1,0 +1,155 @@
+-- Instant Transmission Script
+-- totally not chatgpt lmao
+
+-- overpowered for backstabbing in arsenal
+
+MAX_DISTANCE = 300
+
+local player = game.Players.LocalPlayer
+local uis = game:GetService("UserInputService")
+local teams = game:GetService("Teams")
+local plrGui = player:WaitForChild("PlayerGui")
+local cam = game.Workspace.CurrentCamera
+
+-- Variables for character
+local function setVars()
+	char = player.Character or player.CharacterAdded:Wait()
+	hum = char:WaitForChild("Humanoid")
+	hrp = char:WaitForChild("HumanoidRootPart")
+end
+setVars()
+
+-- Sound setup
+local SOUND_ID = 5066021887
+local SOUND_VOLUME = 0.25
+local sound = Instance.new("Sound")
+sound.SoundId = "rbxassetid://" .. SOUND_ID
+sound.Volume = SOUND_VOLUME
+sound.Parent = hrp
+
+-- UI setup
+local gui = Instance.new("ScreenGui")
+gui.DisplayOrder = 10000
+gui.Parent = plrGui
+gui.ResetOnSpawn = false
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0.15, 0, 0.05, 0) -- Smaller UI
+frame.Position = UDim2.new(0.4, 0, 0.9, 0) -- Bottom of screen
+frame.AnchorPoint = Vector2.new(0, 1)
+frame.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+frame.BorderSizePixel = 2
+frame.Parent = gui
+frame.Active = true
+
+-- Dragging functionality
+local dragUI = Instance.new("TextButton")
+dragUI.Size = UDim2.new(1, 0, 1, 0)
+dragUI.BackgroundTransparency = 1
+dragUI.Text = ""
+dragUI.Parent = frame
+
+local dragging, dragStart, startPos
+dragUI.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		dragStart = input.Position
+		startPos = frame.Position
+	end
+end)
+
+dragUI.InputChanged:Connect(function(input)
+	if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+		local delta = input.Position - dragStart
+		frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+	end
+end)
+
+uis.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = false
+	end
+end)
+
+-- Label
+local label = Instance.new("TextLabel")
+label.Size = UDim2.new(1, 0, 1, 0)
+label.Text = "Instant Transmission"
+label.TextScaled = false
+label.TextSize = 12
+label.BackgroundTransparency = 1
+label.TextColor3 = Color3.new(1, 1, 1)
+label.Parent = frame
+
+-- Minimize button
+local min = Instance.new("TextButton")
+min.Size = UDim2.new(0.2, 0, 1, 0)
+min.Position = UDim2.new(0.8, 0, 0, 0)
+min.Text = "-"
+min.TextScaled = true
+min.BackgroundColor3 = Color3.new(1, 0, 0)
+min.Parent = frame
+
+-- Disable script button
+local box = Instance.new("TextButton")
+box.Size = UDim2.new(1, 0, 1, 0)
+box.Position = UDim2.new(0, 0, 1, 0)
+box.Text = "Click to disable script. Press T to teleport behind players. PS This team checks!"
+box.TextScaled = true
+box.Visible = true
+box.Parent = frame
+
+-- Function to find closest valid player
+local function findPlr()
+	local players = game.Players:GetPlayers()
+	local closestPlayer = nil
+	local closestDistance = MAX_DISTANCE
+
+	for _, plr in ipairs(players) do
+		if plr ~= player and (plr.Team ~= player.Team or #game.Teams:GetChildren() < 2) and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+			local distance = (hrp.Position - plr.Character.HumanoidRootPart.Position).Magnitude
+			if distance < closestDistance then
+				closestDistance = distance
+				closestPlayer = plr
+			end
+		end
+	end
+	return closestPlayer
+end
+
+-- Function to teleport behind the closest player and face them
+local function teleport()
+	local targetPlr = findPlr()
+	if targetPlr and targetPlr.Character and targetPlr.Character:FindFirstChild("HumanoidRootPart") then
+		local targetHrp = targetPlr.Character.HumanoidRootPart
+		local direction = targetHrp.CFrame.LookVector * -2 -- Moves behind
+		hrp.CFrame = targetHrp.CFrame + direction
+		sound:Play()
+
+		-- Make the camera look at the teleported target
+		cam.CFrame = CFrame.lookAt(cam.CFrame.Position, targetHrp.Position)
+	end
+end
+
+-- Keybind for teleportation
+local tp = uis.InputBegan:Connect(function(input, processed)
+	if not processed and input.KeyCode == Enum.KeyCode.T then
+		teleport()
+	end
+end)
+
+-- Disable script button
+box.MouseButton1Click:Connect(function()
+	tp:Disconnect()
+	sound:Destroy()
+	gui:Destroy()
+	script:Destroy()
+end)
+
+-- Minimize button
+min.MouseButton1Click:Connect(function()
+	box.Visible = not box.Visible -- Only hides the disable button
+end)
+
+-- Reset variables when player respawns
+player.CharacterAdded:Connect(setVars)
