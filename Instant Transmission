@@ -140,7 +140,7 @@ end)
 
 -- Disable script button
 box.MouseButton1Click:Connect(function()
-	tp66:Disconnect()
+	tpkey66:Disconnect()
 	sound:Destroy()
 	gui:Destroy()
 	script:Destroy()
