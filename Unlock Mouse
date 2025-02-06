@@ -1,0 +1,97 @@
+-- Unlock mouse i guess??/
+-- not really a hack but it exist
+
+player = game.Players.LocalPlayer
+local function setVars()
+	char = player.Character
+	hum = char:WaitForChild("Humanoid")
+	hrp = char:WaitForChild("HumanoidRootPart")
+	head = char:WaitForChild("Head")
+end
+setVars()
+local plrGui = player.PlayerGui
+local uis = game.UserInputService
+local mouse = player:GetMouse()
+local gui = Instance.new("ScreenGui")
+gui.DisplayOrder = 10001
+gui.Parent = plrGui
+script.Parent = gui
+gui.ResetOnSpawn = false
+local frame = Instance.new("Frame")
+local dragUI = Instance.new("UIDragDetector")
+dragUI.Parent = frame
+frame.Size = UDim2.new(0.075, 0, 0.01, 0)
+frame.BackgroundColor3 = Color3.new(0.9,0.9,0.9)
+frame.BorderSizePixel = 0
+frame.BackgroundTransparency = 0
+frame.Position = UDim2.new(0.5, 0, 0.5, 0)
+frame.AnchorPoint = Vector2.new(0.5, 0.5)
+frame.Parent = gui
+local label = Instance.new("TextLabel")
+label.Parent = frame
+label.Size = UDim2.new(1, 0, 1, 0)
+label.BackgroundTransparency = 1
+label.TextColor3 = Color3.new(0,0,0)
+label.TextScaled = true
+label.Text = "Unlock Mouse"
+label.Parent = frame
+label.TextTransparency = 0
+local box = Instance.new("TextButton")
+box.BorderSizePixel = 0
+box.Visible = true
+box.Text = "Click to close. X to unlock mouse."
+box.BackgroundTransparency = 0
+box.Size = UDim2.new(1, 0, 3, 0)
+box.TextColor = BrickColor.new("White")
+box.Position = UDim2.new(0, 0, 1, 0)
+box.Parent = frame
+box.TextScaled = true
+local min = Instance.new("TextButton")
+min.BorderSizePixel = 0
+min.Text = "-"
+min.BackgroundColor3 = Color3.new(1,0,0)
+min.BackgroundTransparency = 0
+min.Size = UDim2.new(0.1, 0, 1, 0)
+min.Position = UDim2.new(0.9, 0, 0, 0)
+min.Parent = frame
+min.TextScaled = true
+local unlock = Instance.new("TextButton")
+unlock.BackgroundTransparency = 1
+unlock.Parent = frame
+unlock.Text = ""
+unlock.Modal = true
+unlock.Visible = false
+
+local button1 = Instance.new("TextButton")
+button1.BorderSizePixel = 0
+button1.Visible = false
+button1.Text = "Teleportation"
+button1.TextStrokeTransparency = 0.5
+button1.BackgroundTransparency = 0
+button1.Size = UDim2.new(1, 0, 4, 0)
+button1.TextColor = BrickColor.new("White")
+button1.Position = UDim2.new(0, 0, 11, 0)
+button1.Parent = frame
+button1.TextScaled = true
+
+uis.InputBegan:Connect(function(input, typing)
+	if typing then return end
+	if input.KeyCode == Enum.KeyCode.X then
+		unlock.Visible = not unlock.Visible
+	end
+end)
+
+box.MouseButton1Click:Connect(function()
+	gui:Destroy()
+	script:Destroy()
+end)
+min.MouseButton1Click:Connect(function()
+	for i, b in pairs(frame:GetChildren()) do
+		if min == b then continue end
+		if unlock == b then continue end
+		b.Visible = not b.Visible
+	end
+end)
+player.CharacterAdded:Connect(function()
+	setVars()
+end)
