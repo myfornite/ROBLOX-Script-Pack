@@ -1,4 +1,4 @@
-e-- MY ALL HACKS
+-- MY ALL HACKS
 
 -- Contains hacks like aimbot, flying, ESP, +more.
 
