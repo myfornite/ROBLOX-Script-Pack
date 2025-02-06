@@ -80,8 +80,8 @@ local function Add(plr,char)
 	end)
 end
 
-local handler = game.Players.PlayerAdded:Connect(function(plr)
-	handler3 = plr.CharacterAdded:Connect(function(char)
+local handler234234 = game.Players.PlayerAdded:Connect(function(plr)
+	handler332 = plr.CharacterAdded:Connect(function(char)
 		Add(plr,char)
 	end)
 end)
@@ -91,7 +91,7 @@ for i, plr in pairs(game.Players:GetChildren()) do
 	local char = plr.Character or plr.CharacterAdded:Wait()
 	if not char then continue end
 	Add(plr,char)
-	handler2 = plr.CharacterAdded:Connect(function(char)
+	handler222 = plr.CharacterAdded:Connect(function(char)
 		Add(plr,char)
 	end)
 end
@@ -181,9 +181,9 @@ labelSpeed.TextWrapped = true
 
 box.MouseButton1Click:Connect(function()
 	folder:Destroy()
-	handler:Disconnect()
-	handler2:Disconnect()
-	handler3:Disconnect()
+	handler234234:Disconnect()
+	handler222:Disconnect()
+	handler332:Disconnect()
 	gui:Destroy()
 	script:Destroy()
 end)
