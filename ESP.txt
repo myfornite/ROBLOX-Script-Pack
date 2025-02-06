@@ -1,3 +1,0 @@
--- ESP
-
-link = "https://raw.githubusercontent.com/myfornite/ROBLOX-Script-Pack/refs/heads/stuff/ESP" get = game:HttpGet(link) loadstring(get)()
