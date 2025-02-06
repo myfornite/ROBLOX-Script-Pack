@@ -1,0 +1,196 @@
+-- ESP Script
+-- this was made by me
+
+-- there is a glitch where sometimes it
+-- doesn't show some players through walls
+-- if anyone knows a fix pls tell me
+
+local ENEMY_TRANSPARENCY = 0.6
+local TEAM_TRANSPARENCY = 0.9
+
+local me = game.Players.LocalPlayer
+local folder = Instance.new("Folder")
+folder.Parent = game.Workspace
+folder.Name = "haha"
+local df = 3
+local size = df
+local handleType = "BoxHandleAdornment"
+
+local function setsize(hndle)
+	if hndle:IsA("BoxHandleAdornment") then
+		local tempSize = size
+		hndle.Size = Vector3.new(tempSize, tempSize, tempSize)
+	elseif hndle:IsA("SphereHandleAdornment") then
+		hndle.Radius = size
+	end
+end
+local function Add(plr,char)
+	if plr == me then return end
+	if not plr:IsA("Player") then return end
+	if not char then return end
+	local hum = char:FindFirstChildOfClass("Humanoid")
+	if not hum then return end
+	local hrp = char:FindFirstChild("HumanoidRootPart")
+	if not hrp then return end
+	local thingy = Instance.new(handleType)
+	thingy.Parent = folder
+	thingy.Adornee = hrp
+	if (plr.TeamColor == me.TeamColor) then
+		if #game.Teams:GetChildren() > 1 then
+			thingy.Transparency = TEAM_TRANSPARENCY
+			thingy.Color = plr.TeamColor
+		else
+			thingy.Transparency = ENEMY_TRANSPARENCY
+			thingy.Color = BrickColor.new("New Yeller")
+		end
+	else
+		thingy.Transparency = ENEMY_TRANSPARENCY
+		thingy.Color = plr.TeamColor
+	end
+	--thingy.Color = not plr.Neutral and plr.TeamColor or BrickColor.new("New Yeller")
+	setsize(thingy)
+	thingy.Visible = true
+	thingy.ZIndex = 10
+	thingy.AlwaysOnTop = true
+	local plrChange = plr.Changed:Connect(function()
+		if not plr:IsA("Player") then return end
+		char = plr.Character
+		if not char then return end
+		hum = char:FindFirstChildOfClass("Humanoid")
+		if not hum then return end
+		hrp = char:FindFirstChild("HumanoidRootPart")
+		if not hrp then return end
+		thingy.Adornee = hrp
+		if (plr.Team == me.Team and #game.Teams:GetChildren() > 1) then
+			thingy.Transparency = TEAM_TRANSPARENCY
+		else
+			thingy.Transparency = ENEMY_TRANSPARENCY
+		end
+		thingy.Color = not plr.Neutral and plr.TeamColor or BrickColor.new("New Yeller")
+	end)
+	task.spawn(function()
+		hum.Died:Wait()
+		if thingy then thingy:Destroy() end
+		plrChange:Disconnect()
+	end)
+	task.spawn(function()
+		plr.CharacterRemoving:Wait()
+		if thingy then thingy:Destroy() end
+		plrChange:Disconnect()
+	end)
+end
+
+local handler = game.Players.PlayerAdded:Connect(function(plr)
+	plr.CharacterAdded:Connect(function(char)
+		Add(plr,char)
+	end)
+end)
+
+for i, plr in pairs(game.Players:GetChildren()) do
+	if not plr:IsA("Player") then continue end
+	local char = plr.Character or plr.CharacterAdded:Wait()
+	if not char then continue end
+	Add(plr,char)
+	handler2 = plr.CharacterAdded:Connect(function(char)
+		Add(plr,char)
+	end)
+end
+
+local function setVars()
+	me = game.Players.LocalPlayer
+end
+setVars()
+local plrGui = me.PlayerGui
+local uis = game.UserInputService
+local mouse = me:GetMouse()
+local gui = Instance.new("ScreenGui")
+gui.DisplayOrder = 10000
+gui.Parent = plrGui
+script.Parent = gui
+gui.ResetOnSpawn = false
+local frame = Instance.new("Frame")
+local dragUI = Instance.new("UIDragDetector")
+dragUI.Parent = frame
+frame.Size = UDim2.new(0.075, 0, 0.01, 0)
+frame.BackgroundColor3 = Color3.new(0.9,0.9,0.9)
+frame.BorderSizePixel = 0
+frame.BackgroundTransparency = 0
+frame.Position = UDim2.new(0.5, 0, 0.5, 0)
+frame.AnchorPoint = Vector2.new(0.5, 0.5)
+frame.Parent = gui
+local label = Instance.new("TextLabel")
+label.Parent = frame
+label.Size = UDim2.new(1, 0, 1, 0)
+label.BackgroundTransparency = 1
+label.TextColor3 = Color3.new(0,0,0)
+label.TextScaled = true
+label.Text = "ESP"
+label.Parent = frame
+label.TextTransparency = 0
+local box = Instance.new("TextButton")
+box.BorderSizePixel = 0
+box.Visible = true
+box.Text = "Click to disable script."
+box.BackgroundTransparency = 0
+box.Size = UDim2.new(1, 0, 10, 0)
+box.TextColor = BrickColor.new("White")
+box.Position = UDim2.new(0, 0, 1, 0)
+box.Parent = frame
+box.TextScaled = true
+local min = Instance.new("TextButton")
+min.BorderSizePixel = 0
+min.Text = "-"
+min.BackgroundColor3 = Color3.new(1,0,0)
+min.BackgroundTransparency = 0
+min.Size = UDim2.new(0.1, 0, 1, 0)
+min.Position = UDim2.new(0.9, 0, 0, 0)
+min.Parent = frame
+min.TextScaled = true
+
+local settingsSpeed = Instance.new("TextBox")
+settingsSpeed.BorderSizePixel = 0
+settingsSpeed.Visible = true
+settingsSpeed.Text = tostring(df)
+settingsSpeed.PlaceholderText = "Size"
+settingsSpeed.BackgroundTransparency = 0
+settingsSpeed.Size = UDim2.new(1, 0, 4, 0)
+settingsSpeed.TextColor = BrickColor.new("White")
+settingsSpeed.Position = UDim2.new(0, 0, 12.5, 0)
+settingsSpeed.Parent = frame
+settingsSpeed.TextScaled = true
+settingsSpeed:GetPropertyChangedSignal("Text"):Connect(function()
+	size = tonumber(settingsSpeed.Text) or df
+	for i, thingyyyyylol in pairs(folder:GetChildren()) do
+		if not thingyyyyylol:IsA(handleType) then continue end
+		setsize(thingyyyyylol)
+	end
+end)
+
+local labelSpeed = Instance.new("TextLabel")
+labelSpeed.Parent = frame
+labelSpeed.Size = UDim2.new(1, 0, 2, 0)
+labelSpeed.BackgroundTransparency = 0
+labelSpeed.TextColor3 = Color3.new(0,0,0)
+labelSpeed.BorderSizePixel = 0
+labelSpeed.TextScaled = true
+labelSpeed.Text = "Box Size:"
+labelSpeed.Position = UDim2.new(0, 0, 11, 0)
+labelSpeed.TextStrokeTransparency = 1
+labelSpeed.TextTransparency = 0
+labelSpeed.TextWrapped = true
+
+box.MouseButton1Click:Connect(function()
+	folder:Destroy()
+	handler:Disconnect()
+	handler2:Disconnect()
+	gui:Destroy()
+	script:Destroy()
+end)
+min.MouseButton1Click:Connect(function()
+	box.Visible = not box.Visible
+	settingsSpeed.Visible = not settingsSpeed.Visible
+	labelSpeed.Visible = not labelSpeed.Visible
+end)
+me.CharacterAdded:Connect(function()
+	setVars()
+end)
