@@ -1,5 +1,1 @@
--- MY ALL HACKS ENABLER
-
--- Contains hacks like aimbot, flying, ESP, +more.
-
-link = "https://raw.githubusercontent.com/myfornite/ROBLOX-Script-Pack/refs/heads/stuff/MAIN%20SET%20UP" get = game:HttpGet(link) loadstring(get)()
+-- hi read the README
