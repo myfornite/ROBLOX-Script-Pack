@@ -66,16 +66,20 @@ local tpf = uis.InputBegan:Connect(function(input, typing)
 		if IsJumpPwr then
 			dfJump = game.StarterPlayer.CharacterJumpPower
 			savedHeight = hum.JumpPower
-			task.wait()
 			hum.JumpPower = dfJump
+			task.delay(0.05, function()
+				hum.JumpPower = dfJump
+			end)
 		else
 			dfJump = game.StarterPlayer.CharacterJumpHeight
 			savedHeight = hum.JumpHeight
-			task.wait()
 			hum.JumpHeight = dfJump
+			task.delay(0.05, function()
+				hum.JumpHeight = dfJump
+			end)
 		end
 		hum:ChangeState(Enum.HumanoidStateType.Jumping)
-		task.wait()
+		task.wait(0.1)
 		if IsJumpPwr then
 			hum.JumpPower = savedHeight or dfJump
 		else
