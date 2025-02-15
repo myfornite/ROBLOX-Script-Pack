@@ -60,7 +60,27 @@ min.TextScaled = true
 local tpf = uis.InputBegan:Connect(function(input, typing)
 	if typing then return end
 	if input.KeyCode == Enum.KeyCode.Space then
+		local savedHeight = nil
+		local IsJumpPwr = hum.UseJumpPower
+		local dfJump = nil
+		if IsJumpPwr then
+			dfJump = game.StarterPlayer.CharacterJumpPower
+			savedHeight = hum.JumpPower
+			task.wait()
+			hum.JumpPower = dfJump
+		else
+			dfJump = game.StarterPlayer.CharacterJumpHeight
+			savedHeight = hum.JumpHeight
+			task.wait()
+			hum.JumpHeight = dfJump
+		end
 		hum:ChangeState(Enum.HumanoidStateType.Jumping)
+		task.wait()
+		if IsJumpPwr then
+			hum.JumpPower = savedHeight or dfJump
+		else
+			hum.JumpHeight = savedHeight or dfJump
+		end
 	end
 end)
 box.MouseButton1Click:Connect(function()
