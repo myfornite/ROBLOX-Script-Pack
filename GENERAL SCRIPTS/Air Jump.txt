@@ -1,0 +1,3 @@
+-- Air Jump
+
+link = "https://raw.githubusercontent.com/myfornite/ROBLOX-Script-Pack/refs/heads/stuff/Air%20Jump" get = game:HttpGet(link) loadstring(get)()
